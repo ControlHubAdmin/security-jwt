@@ -1,0 +1,21 @@
+
+£
+java:S1186 "€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(©é×úÿÿÿÿ8Íİá¯¿1
+T
+java:S1874"2Remove this use of "setSubject"; it is deprecated.(³ÀÀúÿÿÿÿ8ˆ¼à¯¿1
+P
+java:S1874"3Remove this use of "setIssuedAt"; it is deprecated.(øÔ÷ò8‰¼à¯¿1
+R
+java:S1874"5Remove this use of "setExpiration"; it is deprecated.(€˜®ğ8Š¼à¯¿1
+R
+java:S1874"0Remove this use of "signWith"; it is deprecated.(…î˜úüÿÿÿÿ8Š¼à¯¿1
+\
+java:S1874":Remove this use of "SignatureAlgorithm"; it is deprecated.(…î˜úüÿÿÿÿ8Š¼à¯¿1
+\
+java:S1874":Remove this use of "SignatureAlgorithm"; it is deprecated.(…î˜úüÿÿÿÿ8Š¼à¯¿1
+N
+java:S1172 ",Remove this unused method parameter "token".(©é×úÿÿÿÿ8Óİá¯¿1
+T
+java:S1144"2Remove this unused private "generateToken" method.(Û†Èÿÿÿÿÿ8Œ¼à¯¿1
+S
+java:S1144"1Remove this unused private "extractClaim" method.(ÍÈóúÿÿÿÿ8Œ¼à¯¿1
