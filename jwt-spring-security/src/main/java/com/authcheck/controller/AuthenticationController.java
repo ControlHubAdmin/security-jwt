@@ -2,6 +2,7 @@ package com.authcheck.controller;
 
 
 import com.authcheck.dto.JwtAuthenticationResponse;
+import com.authcheck.dto.RefreshTokenRequest;
 import com.authcheck.dto.SignInRequest;
 import com.authcheck.dto.SignUpRequest;
 import com.authcheck.entities.User;
@@ -31,4 +32,11 @@ public class AuthenticationController {
     public ResponseEntity<JwtAuthenticationResponse> signIn(@RequestBody SignInRequest signInRequest){
         return ResponseEntity.ok(authenticationService.signIn(signInRequest));
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest){
+        return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
+    }
+
+
 }
