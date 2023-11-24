@@ -16,9 +16,9 @@ import java.util.function.Function;
 import static io.jsonwebtoken.Jwts.*;
 
 @Service
-public class JWTServiceImpl  {
+public class JWTServiceImpl implements JWTService {
 
-    private String generateToken(UserDetails userDetails){
+    public String generateToken(UserDetails userDetails){
         return builder().setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() +1000 * 60 *24))
@@ -46,7 +46,7 @@ public class JWTServiceImpl  {
     }
 
 
-    private boolean isTokenValid(String token,UserDetails userDetails){
+    public boolean isTokenValid(String token,UserDetails userDetails){
         final String username = extractUserName(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
