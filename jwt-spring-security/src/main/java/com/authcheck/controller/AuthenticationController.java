@@ -1,6 +1,8 @@
 package com.authcheck.controller;
 
 
+import com.authcheck.dto.JwtAuthenticationResponse;
+import com.authcheck.dto.SignInRequest;
 import com.authcheck.dto.SignUpRequest;
 import com.authcheck.entities.User;
 import com.authcheck.services.AuthenticationService;
@@ -24,8 +26,9 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.signup(signUpRequest));
     }
 
-    @GetMapping("/hello")
-    public ResponseEntity<String> getAllUser(){
-        return ResponseEntity.ok("hai");
+
+    @GetMapping("/signIn")
+    public ResponseEntity<JwtAuthenticationResponse> signIn(@RequestBody SignInRequest signInRequest){
+        return ResponseEntity.ok(authenticationService.signIn(signInRequest));
     }
 }
