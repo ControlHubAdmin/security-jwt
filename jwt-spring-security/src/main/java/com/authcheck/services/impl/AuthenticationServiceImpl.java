@@ -1,6 +1,7 @@
 package com.authcheck.services.impl;
 
 import com.authcheck.dto.JwtAuthenticationResponse;
+import com.authcheck.dto.RefreshTokenRequest;
 import com.authcheck.dto.SignInRequest;
 import com.authcheck.dto.SignUpRequest;
 import com.authcheck.entities.Role;
@@ -60,5 +61,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         jwtAuthenticationResponse.setRefreshToken(refreshToken);
 
         return jwtAuthenticationResponse;
+    }
+
+    @Override
+    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest){
+        String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
+        User user = userRepository.findByEmail(userEmail).orElseThrow();
+
+        if(jwtService.isTokenValid(refreshTokenRequest.getToken(),user)){
+            var jwt = jwtService.generateToken(user);
+
+            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
+
+            jwtAuthenticationResponse.setToken(jwt);
+            jwtAuthenticationResponse.setRefreshToken(refreshTokenRequest.getToken());
+            return jwtAuthenticationResponse;
+
+        }
+        return null;
     }
 }
