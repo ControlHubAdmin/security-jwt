@@ -6,5 +6,7 @@ public interface UserService {
 
     UserDetailsService userDetailsService();
 
+    boolean isEmailAlreadyExists(String email);
+
 
 }

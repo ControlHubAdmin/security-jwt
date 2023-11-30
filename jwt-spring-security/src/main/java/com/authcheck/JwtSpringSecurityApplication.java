@@ -24,8 +24,8 @@ public class JwtSpringSecurityApplication implements CommandLineRunner {
 			User user = new User();
 
 			user.setEmail("admin@gmail.com");
-			user.setFirstName("admin");
-			user.setSecondName("admin");
+			user.setUsername("admin");
+			user.setPhone("6238648001");
 			user.setRole(Role.ADMIN);
 			user.setPassword(new BCryptPasswordEncoder().encode("admin"));
 			userRepository.save(user);
