@@ -14,6 +14,8 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<String> sayHello(){
+        System.out.println("Cominggggggg");
+
         return ResponseEntity.ok("Hii user");
     }
 }

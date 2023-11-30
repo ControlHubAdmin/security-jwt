@@ -5,9 +5,9 @@ import lombok.*;
 @Data
 public class SignUpRequest {
 
-    private String firstName;
-    private String secondName;
+    private String username;
     private String email;
+    private String phone;
     private String password;
 
 }
