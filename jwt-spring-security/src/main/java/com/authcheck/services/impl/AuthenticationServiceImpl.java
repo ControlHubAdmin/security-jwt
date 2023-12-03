@@ -53,13 +53,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         var user = userRepository.findByEmail(signInRequest.getEmail())
                 .orElseThrow(()->new IllegalArgumentException("Invalid userName or password"));
+        System.out.println("exception occured");
 
         var jwt = jwtService.generateToken(user);
+        System.out.println("nt coming");
         var refreshToken =  jwtService.generateRefreshToken(new HashMap<>(),user);
 
         JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
         jwtAuthenticationResponse.setToken(jwt);
         jwtAuthenticationResponse.setRefreshToken(refreshToken);
+        jwtAuthenticationResponse.setUser(user);
 
         return jwtAuthenticationResponse;
     }
@@ -76,6 +79,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             jwtAuthenticationResponse.setToken(jwt);
             jwtAuthenticationResponse.setRefreshToken(refreshTokenRequest.getToken());
+            jwtAuthenticationResponse.setUser(user);
             return jwtAuthenticationResponse;
 
         }

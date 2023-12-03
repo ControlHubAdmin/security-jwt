@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.service.annotation.PostExchange;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -53,9 +54,13 @@ public class AuthenticationController {
     }
 
 
-    @GetMapping("/signIn")
+    @PostMapping("/signIn")
     public ResponseEntity<JwtAuthenticationResponse> signIn(@RequestBody SignInRequest signInRequest){
-        return ResponseEntity.ok(authenticationService.signIn(signInRequest));
+        System.out.println(signInRequest.getEmail());
+        System.out.println("cominggg");
+       JwtAuthenticationResponse response =  authenticationService.signIn(signInRequest);
+        System.out.println(response.getToken());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/refresh")
