@@ -16,8 +16,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.service.annotation.PostExchange;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 
@@ -136,14 +141,12 @@ public class AuthenticationController {
     @DeleteMapping("/delete-user/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable String id,HttpServletRequest request){
         Integer userId = Integer.parseInt(id);
-
         String token = request.getHeader("Authorization").split(" ")[1];
         if (jwtService.isTokenExpired(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         else {
             userService.deleteUser(userId);
-
             return ResponseEntity.ok("Deleted");
         }
 
@@ -154,6 +157,54 @@ public class AuthenticationController {
     @PutMapping("")
     public void test(){
 
+    }
+
+
+    @PostMapping("/update-profile-picture/{userId}")
+    public ResponseEntity<User> updateProfilePicture(
+            @PathVariable String userId,
+            @RequestParam("profilePicture") MultipartFile profilePicture,HttpServletRequest request) {
+
+        Integer id = Integer.parseInt(userId);
+
+        String token = request.getHeader("Authorization").split(" ")[1];
+        if (jwtService.isTokenExpired(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        try {
+
+            String profilePicUrl = saveProfilePicture(id, profilePicture);
+
+            // Update the user's profilePicUrl in the database
+            Optional<User> optionalUser = userRepository.findById(id);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                user.setProfilePicUrl(profilePicUrl);
+                userRepository.save(user);
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+
+        } catch (IOException e) {
+            // Handle the exception (e.g., log it or return an error response)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    private String saveProfilePicture(Integer userId, MultipartFile profilePicture) throws IOException {
+
+        String uploadDirectory = "uploads";
+        String fileName = userId + "_" + profilePicture.getOriginalFilename();
+        String filePath = Paths.get(uploadDirectory, fileName).toString();
+
+        // Save the file
+        Files.copy(profilePicture.getInputStream(), Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
+
+        // Return the URL to the saved profile picture
+        return "C:\\security-jwt\\uploads" + fileName; // Adjust the URL based on your setup
     }
 
 
