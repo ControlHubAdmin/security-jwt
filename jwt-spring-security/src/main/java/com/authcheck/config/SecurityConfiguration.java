@@ -38,7 +38,8 @@ public class SecurityConfiguration {
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/api/v1/auth/**").permitAll() // Allow access to /api/v1/auth/** without authentication
+                        .requestMatchers("/api/v1/auth/**","/uploads/**").
+                        permitAll() // Allow access to /api/v1/auth/** without authentication
                         .requestMatchers("/api/v1/admin").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/v1/user").hasAnyAuthority(Role.USER.name())
                         .anyRequest().authenticated())
