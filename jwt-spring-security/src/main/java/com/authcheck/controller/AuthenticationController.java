@@ -73,7 +73,7 @@ public class AuthenticationController {
         System.out.println(signInRequest.getEmail());
         System.out.println(signInRequest.getPassword());
         System.out.println("cominggghh");
-       JwtAuthenticationResponse response =  authenticationService.signIn(signInRequest);
+        JwtAuthenticationResponse response =  authenticationService.signIn(signInRequest);
 
         System.out.println(response.getToken()+"vsjdvjsn");
         return ResponseEntity.ok(response);
@@ -131,6 +131,22 @@ public class AuthenticationController {
             // Handle the case where the user with the given ID is not found
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @DeleteMapping("/delete-user/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable String id,HttpServletRequest request){
+        Integer userId = Integer.parseInt(id);
+
+        String token = request.getHeader("Authorization").split(" ")[1];
+        if (jwtService.isTokenExpired(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        else {
+            userService.deleteUser(userId);
+
+            return ResponseEntity.ok("Deleted");
+        }
+
     }
 
 

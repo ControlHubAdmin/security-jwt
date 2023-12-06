@@ -44,6 +44,17 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll().stream().filter(user -> user.getRole()!= Role.ADMIN).toList();
     }
 
+    @Override
+    public void deleteUser(Integer userId) {
+
+        Optional <User> optionalUser = userRepository.findById(userId);
+        if(optionalUser.isPresent()){
+            User existingUser = optionalUser.get();
+            userRepository.delete(existingUser);
+        }
+
+    }
+
 //    @Override
 //    public User updateUser(Integer userId, UpdateUserRequest updateUserRequest)  {
 //        Optional<User> optionalUser = userRepository.findById(userId);
