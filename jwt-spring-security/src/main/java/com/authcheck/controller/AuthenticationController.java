@@ -2,16 +2,24 @@ package com.authcheck.controller;
 
 
 import com.authcheck.dto.*;
+import com.authcheck.entities.Role;
 import com.authcheck.entities.User;
+import com.authcheck.repository.UserRepository;
 import com.authcheck.services.AuthenticationService;
+import com.authcheck.services.JWTService;
 import com.authcheck.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.service.annotation.PostExchange;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -24,6 +32,12 @@ public class AuthenticationController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    JWTService jwtService;
+
+    @Autowired
+    UserRepository userRepository;
 
 
     @PostMapping("/signup")
@@ -57,17 +71,77 @@ public class AuthenticationController {
     @PostMapping("/signIn")
     public ResponseEntity<JwtAuthenticationResponse> signIn(@RequestBody SignInRequest signInRequest){
         System.out.println(signInRequest.getEmail());
-        System.out.println("cominggg");
+        System.out.println(signInRequest.getPassword());
+        System.out.println("cominggghh");
        JwtAuthenticationResponse response =  authenticationService.signIn(signInRequest);
-        System.out.println(response.getToken());
+
+        System.out.println(response.getToken()+"vsjdvjsn");
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/all-users")
+    public  ResponseEntity<List<User>> getAllUsers(){
+        List <User> users  = userService.getAllUsers();
+        return  ResponseEntity.ok(users);
+    };
 
     @PostMapping("/refresh")
     public ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest){
         System.out.println("Post coming");
         return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
     }
+
+
+
+
+    @PutMapping("/edit-user/{id}")
+    public ResponseEntity<User> editUser(@RequestBody UpdateUserRequest updateUserRequest,
+                                         @PathVariable String id, HttpServletRequest request) {
+        System.out.println("edit coming");
+
+        Integer userId = Integer.parseInt(id);
+        System.out.println("iddd"+userId);
+
+        // Extract token from request headers
+        String token = request.getHeader("Authorization").split(" ")[1];
+
+        System.out.println("cominghhjj"+token);
+        // Validate the token
+        if (jwtService.isTokenExpired(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Optional<User> optionalUser = userRepository.findById(userId);
+
+        if (optionalUser.isPresent()) {
+            User existingUser = optionalUser.get();
+
+            // Update user details based on the data in updateUserRequest
+            existingUser.setUsername(updateUserRequest.getUsername());
+            existingUser.setEmail(updateUserRequest.getEmail());
+            existingUser.setPhone(updateUserRequest.getPhone());
+            existingUser.setRole(Role.valueOf(updateUserRequest.getRole().toUpperCase()));
+
+            // Save the updated user to the database
+            User updatedUser = userRepository.save(existingUser);
+
+            // Return the updated user in the response
+            return ResponseEntity.ok(updatedUser);
+        } else {
+            // Handle the case where the user with the given ID is not found
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
+    @PutMapping("")
+    public void test(){
+
+    }
+
+
+
 
 
 }
